@@ -6,19 +6,31 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  gender: String,
-  phone: String,
-  barth_date: String,
+  // gender: String,
+  // phone: String,
+  birth_date: String,
   location: String,
-  friends: Object,
-  posts: Object,
-  comments: Object,
-  likes: Object,
-  token: String,
+  // img:String,
+  status: [
+    {
+      text: String,
+      feeling: String,
+      img: String,
+      comment: Number,
+      like: Number,
+    },
+  ],
+  friends: [
+    {
+      username: String,
+    },
+  ],
+  // token: String,
 });
+userSchema.methods.comPass = async (pass, passDB) => {
+  return await bcrypt.compare(pass, passDB);
+};
 
+const User = mongoose.model("User", userSchema);
 
-const User = mongoose.model("User", userSchema, "users");
-
-
-module.exports = { User, Post };
+module.exports = User;
