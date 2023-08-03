@@ -65,16 +65,27 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
+    // console.log(user)
+
     if (!user) {
       return res.status(409).json({ message: "Not Match Email or Password" });
     } else {
       const matchPass = await user.comPass(password, user.password);
       if (matchPass) {
         //create a token
+        // console.log("first")
         const token = createToken(user._id);
-        res.status(201).json({
+        res.status(200).json({
           token,
-          userId: user._id,
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          gender: user.gender,
+          phone: user.phone,
+          birth_date: user.birth_date,
+          location: user.location,
+          status: user.status,
+          friends: user.friends,
         });
       } else {
         res.status(409).json({ message: "Not Match Email or Password" });

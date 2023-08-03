@@ -15,6 +15,7 @@ router.route("/edit-user/:id").patch(userController.editProfile);
 
 
 router.route("/add-friend/:id").patch(userController.friendRequest);
+// router.route("/profile/:id").get(userController.protect, userController.getUserProfile);
 router.route("/profile/:id").get(userController.getUserProfile);
 
 
