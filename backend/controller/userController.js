@@ -7,14 +7,39 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET);
 };
 
+// get All users
+
+exports.getAllUser = async (req, res) => {
+  try {
+    const user = await User.find();
+    res.status(200).json({
+      user,
+    });
+  } catch (err) {
+    res.status(404).json({
+      message: err.message,
+    });
+  }
+};
+
 // signup user
 exports.signupUser = async (req, res) => {
-  const { email, firstName,lastName, pass, location, birthday,mobileNumber, friends, status, gender,   } =
-    req.body;
+  const {
+    email,
+    firstName,
+    lastName,
+    pass,
+    location,
+    birthday,
+    mobileNumber,
+    friends,
+    status,
+    gender,
+  } = req.body;
   const encryptPassword = await bcrypt.hash(pass, 10);
   try {
     const user = await User.create({
-      username: `${firstName } ${lastName}`,
+      username: `${firstName} ${lastName}`,
       email,
       password: encryptPassword,
       birth_date: birthday,
@@ -29,7 +54,7 @@ exports.signupUser = async (req, res) => {
     // const token = createToken(user._id);
     const thatUser = await User.findOne({ email });
 
-    res.status(200).json({ id: thatUser._id });
+    res.status(200).json(thatUser);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -173,7 +198,7 @@ exports.friendRequest = async (req, res) => {
 
 exports.getUserProfile = async (req, res) => {
   try {
-    const userId = req.params.id; 
+    const userId = req.params.id;
     const user = await User.findById(userId);
 
     if (!user) {
@@ -186,25 +211,25 @@ exports.getUserProfile = async (req, res) => {
       .status(500)
       .json({ error: "An error occurred while fetching the user profile" });
   }
-}
-  //  Protect Code
-  exports.protect = async (req, res, next) => {
-    try {
-      const testToken = req.headers.authorization;
-      let token;
-      if (testToken && testToken.startsWith("bearer")) {
-        token = testToken.split(" ")[1];
-      }
-      if (!token) {
-        res.status(401).json({
-          message: "You are not Login",
-        });
-      }
-      await util.promisify(jwt.verify)(token, process.env.JWT_SECRET);
-      next();
-    } catch (error) {
-      res.status(400).json({
-        message: error.message,
+};
+//  Protect Code
+exports.protect = async (req, res, next) => {
+  try {
+    const testToken = req.headers.authorization;
+    let token;
+    if (testToken && testToken.startsWith("bearer")) {
+      token = testToken.split(" ")[1];
+    }
+    if (!token) {
+      res.status(401).json({
+        message: "You are not Login",
       });
     }
+    await util.promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    next();
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
   }
+};

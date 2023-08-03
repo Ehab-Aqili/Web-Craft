@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.route("/signup").post(userController.signupUser);
 router.route("/login").post(userController.loginUser);
+router.route("/get-users").get(userController.getAllUser);
 
 router.route("/create-post/:id").patch(userController.postStatus);
 router.route("/feed/:id").get(userController.getFeed);
