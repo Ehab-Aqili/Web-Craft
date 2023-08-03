@@ -1,14 +1,24 @@
 const User = require("../model/Models");
-const jwt = require("jsonwebtoken");
+
+// 
+const express = require('express')
+const cors = require('cors')
+// 
+
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const util = require("util");
 
-const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.JWT_SECRET);
+// 
+const app = express()
+app.use(cors())
+// 
+
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET);
 };
 
 // get All users
-
 exports.getAllUser = async (req, res) => {
   try {
     const user = await User.find();
@@ -217,10 +227,12 @@ exports.getUserProfile = async (req, res) => {
     }
 
     res.status(200).json(user);
-  } catch (err) {
+  } catch (error) {
     res
-      .status(500)
-      .json({ error: "An error occurred while fetching the user profile" });
+      .status(400)
+      .json({
+        message: error.message
+      });
   }
 };
 //  Protect Code
