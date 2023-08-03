@@ -6,11 +6,10 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  // gender: String,
-  // phone: String,
+  gender: String,
+  phone: String,
   birth_date: String,
   location: String,
-  // img:String,
   status: [
     {
       text: String,

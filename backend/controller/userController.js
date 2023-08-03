@@ -9,24 +9,27 @@ const createToken = (_id) => {
 
 // signup user
 exports.signupUser = async (req, res) => {
-  const { email, username, password, location, birth_date, friends, status } =
+  const { email, firstName,lastName, pass, location, birthday,mobileNumber, friends, status, gender,   } =
     req.body;
-  const encryptPassword = await bcrypt.hash(password, 10);
+  const encryptPassword = await bcrypt.hash(pass, 10);
   try {
     const user = await User.create({
-      username,
+      username: `${firstName } ${lastName}`,
       email,
       password: encryptPassword,
-      birth_date,
+      birth_date: birthday,
       location,
+      gender,
+      phone: mobileNumber,
       status: [],
       friends: [],
     });
 
     //create a token
     // const token = createToken(user._id);
+    const thatUser = await User.findOne({ email });
 
-    res.status(200).json({ user });
+    res.status(200).json({ id: thatUser._id });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -168,9 +171,9 @@ exports.friendRequest = async (req, res) => {
 
 // get  profile  code
 
-(exports.getUserProfile = async (req, res) => {
+exports.getUserProfile = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.params.id; 
     const user = await User.findById(userId);
 
     if (!user) {
@@ -183,9 +186,9 @@ exports.friendRequest = async (req, res) => {
       .status(500)
       .json({ error: "An error occurred while fetching the user profile" });
   }
-}),
+}
   //  Protect Code
-  (exports.protect = async (req, res, next) => {
+  exports.protect = async (req, res, next) => {
     try {
       const testToken = req.headers.authorization;
       let token;
@@ -204,4 +207,4 @@ exports.friendRequest = async (req, res) => {
         message: error.message,
       });
     }
-  });
+  }
