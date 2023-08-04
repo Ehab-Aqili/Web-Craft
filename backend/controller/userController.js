@@ -87,7 +87,7 @@ exports.loginUser = async (req, res) => {
         const token = createToken(user._id);
         res.status(200).json({
           token,
-          id: user._id,
+          userId: user._id,
           username: user.username,
           email: user.email,
           gender: user.gender,
@@ -153,7 +153,8 @@ exports.getFeed = async (req, res) => {
 exports.search = async (req, res) => {
   try {
     // console.log((req.body.username).length)
-    const searchUser = await req.body.searchUserName.trim();
+    const searchUser = await req.params.input
+    // const searchUser = await req.body.searchUserName.trim();
     const regexPattern = new RegExp("^" + searchUser, "i");
     const users = await User.find({ username: regexPattern });
     res.send(users);
@@ -239,6 +240,7 @@ exports.getUserProfile = async (req, res) => {
 exports.protect = async (req, res, next) => {
   try {
     const testToken = req.headers.authorization;
+    console.log(testToken)
     let token;
     if (testToken && testToken.startsWith("bearer")) {
       token = testToken.split(" ")[1];

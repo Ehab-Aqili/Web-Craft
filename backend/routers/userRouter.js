@@ -10,7 +10,7 @@ router.route("/get-users").get(userController.getAllUser);
 router.route("/create-post/:id").patch(userController.postStatus);
 router.route("/feed/:id").get(userController.getFeed);
 
-router.route("/search").get(userController.search);
+router.route("/search/:input").get(userController.search);
 router.route("/edit-user/:id").patch(userController.editProfile);
 
 
