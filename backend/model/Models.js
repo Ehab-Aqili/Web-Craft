@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
   friends: [
     {
       username: String,
+      image:String
     },
   ],
   // token: String,

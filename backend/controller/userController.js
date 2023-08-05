@@ -53,7 +53,7 @@ exports.signupUser = async (req, res) => {
       username: `${firstName} ${lastName}`,
       email,
       password: encryptPassword,
-      image:"https://image.shutterstock.com/image-photo/casually-handsome-confident-young-man-260nw-439433326.jpg",
+      image: "https://image.shutterstock.com/image-photo/casually-handsome-confident-young-man-260nw-439433326.jpg",
       birth_date: birthday,
       location,
       gender,
@@ -74,7 +74,7 @@ exports.signupUser = async (req, res) => {
 
 //login user
 exports.loginUser = async (req, res) => {
-  const { email, password,image } = req.body;
+  const { email, password, image } = req.body;
   try {
     const user = await User.findOne({ email });
     // console.log(user)
@@ -196,20 +196,24 @@ exports.editProfile = async (req, res) => {
 // Add new Friends
 
 exports.friendRequest = async (req, res) => {
-  const postId = req.params.id;
+  const myUserId = req.params.id;
+  const username = req.body.username
+  const newUser = await User.findOne({ username })
   try {
     const friendRequest = {
-      username: req.body.username,
+      username,
+      image: newUser.image
     };
-    const newPost = await User.updateOne(
-      { _id: postId },
+    const newFriend = await User.updateOne(
+      { _id: myUserId },
 
       { $push: { friends: friendRequest } }
     );
 
+
     const message = "Send request friend";
     res.status(201).json({
-      newPost,
+      newFriend,
       message: { message },
     });
   } catch (err) {
@@ -235,7 +239,7 @@ exports.getUserProfile = async (req, res) => {
     res.status(200).json({
       userId: user._id,
       username: user.username,
-      image:user.image,
+      image: user.image,
       email: user.email,
       gender: user.gender,
       phone: user.phone,
