@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+// const bodyParser = require("body-parser");
 const Routes = require("./routers/userRouter");
 dotenv.config({ path: "./.env" });
 
@@ -20,6 +21,10 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use("/user", Routes);
+
+// Increase payload size limit to 50MB
+// app.use(bodyParser.json({ limit: "50mb" }));
+// app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 
 

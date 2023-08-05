@@ -45,6 +45,7 @@ exports.signupUser = async (req, res) => {
     friends,
     status,
     gender,
+    image
   } = req.body;
   const encryptPassword = await bcrypt.hash(pass, 10);
   try {
@@ -52,6 +53,7 @@ exports.signupUser = async (req, res) => {
       username: `${firstName} ${lastName}`,
       email,
       password: encryptPassword,
+      image,
       birth_date: birthday,
       location,
       gender,
@@ -72,7 +74,7 @@ exports.signupUser = async (req, res) => {
 
 //login user
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password,image } = req.body;
   try {
     const user = await User.findOne({ email });
     // console.log(user)
@@ -89,6 +91,7 @@ exports.loginUser = async (req, res) => {
           token,
           userId: user._id,
           username: user.username,
+          image: user.image,
           email: user.email,
           gender: user.gender,
           phone: user.phone,
@@ -223,7 +226,7 @@ exports.getUserProfile = async (req, res) => {
     const userId = req.params.id;
     const user = await User.findById(userId);
     const x = { id: user._id };
-    console.log(x.id);
+    // console.log(x.id);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -232,6 +235,7 @@ exports.getUserProfile = async (req, res) => {
     res.status(200).json({
       userId: user._id,
       username: user.username,
+      image:user.image,
       email: user.email,
       gender: user.gender,
       phone: user.phone,
@@ -250,7 +254,7 @@ exports.getUserProfile = async (req, res) => {
 exports.protect = async (req, res, next) => {
   try {
     const testToken = req.headers.authorization;
-    console.log(testToken);
+    // console.log(testToken);
     let token;
     if (testToken && testToken.startsWith("bearer")) {
       token = testToken.split(" ")[1];
