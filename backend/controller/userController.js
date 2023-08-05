@@ -53,7 +53,7 @@ exports.signupUser = async (req, res) => {
       username: `${firstName} ${lastName}`,
       email,
       password: encryptPassword,
-      image,
+      image:"https://image.shutterstock.com/image-photo/casually-handsome-confident-young-man-260nw-439433326.jpg",
       birth_date: birthday,
       location,
       gender,
