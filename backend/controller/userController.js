@@ -1,18 +1,18 @@
 const User = require("../model/Models");
 
-// 
-const express = require('express')
-const cors = require('cors')
-// 
+//
+const express = require("express");
+const cors = require("cors");
+//
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const util = require("util");
 
-// 
-const app = express()
-app.use(cors())
-// 
+//
+const app = express();
+app.use(cors());
+//
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
@@ -153,7 +153,7 @@ exports.getFeed = async (req, res) => {
 exports.search = async (req, res) => {
   try {
     // console.log((req.body.username).length)
-    const searchUser = await req.params.input
+    const searchUser = await req.params.input;
     // const searchUser = await req.body.searchUserName.trim();
     const regexPattern = new RegExp("^" + searchUser, "i");
     const users = await User.find({ username: regexPattern });
@@ -222,25 +222,35 @@ exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.params.id;
     const user = await User.findById(userId);
+    const x = { id: user._id };
+    console.log(x.id);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json(user);
+    res.status(200).json({
+      userId: user._id,
+      username: user.username,
+      email: user.email,
+      gender: user.gender,
+      phone: user.phone,
+      birth_date: user.birth_date,
+      location: user.location,
+      status: user.status,
+      friends: user.friends,
+    });
   } catch (error) {
-    res
-      .status(400)
-      .json({
-        message: error.message
-      });
+    res.status(400).json({
+      message: error.message,
+    });
   }
 };
 //  Protect Code
 exports.protect = async (req, res, next) => {
   try {
     const testToken = req.headers.authorization;
-    console.log(testToken)
+    console.log(testToken);
     let token;
     if (testToken && testToken.startsWith("bearer")) {
       token = testToken.split(" ")[1];
