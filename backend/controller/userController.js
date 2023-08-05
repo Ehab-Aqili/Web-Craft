@@ -122,14 +122,14 @@ exports.postStatus = async (req, res) => {
       { $push: { status: Post } }
     );
 
-    const message = "Add New Status";
+    const message = "Post added successfully";
     res.status(201).json({
       newPost,
       message: { message },
     });
   } catch (err) {
     res.status(404).json({
-      message: err.message,
+      message: "Something went wrong",
     });
   }
 };
